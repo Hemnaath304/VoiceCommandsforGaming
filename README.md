@@ -31,6 +31,29 @@ Thetranscribedtextiscleanedandcomparedagainstapredefinedlistofvalid game command
 ○	Forcommandsrelatedtotheshootinggame("shoot,""jump,""reload"), the system acknowledges the command with a suitable response.
  
 ○	For stone-paper-scissors commands, the system randomly selects a computermoveanddeterminesthewinnerbasedontheclassicgame rules.
+InputFormat:
+●	AZIPfileuploadedbytheuser.
+●	TheZIPfilecontainsfoldersandsubfolderswithaudiofilesinside.
+●	Audiofilesarein`.wav`or`.mp3`format(MP3filesareconverted automatically).
+
+OutputFormat:
+●	Aplaintextfile(`output.txt`)saved todisk.
+●	Thefilecontains:
+○	Audiofilenameprocessed.
+○	Recognizedcommandorerrormessage.
+○	Gamemovesandwinnerforstone-paper-scissorscommands.
+○	Messagesforinvalidorignored commands.
+ 
+TestingandValidation:
+●	Testedwithavarietyofaudiofilesinnestedfolderstructures.
+●	VerifiedMP3toWAVconversionworkscorrectly.
+●	Confirmedspeechrecognitionaccuracywithclearaudiosamples.
+●	Validatedgamelogicbysimulatingmultiplerandomcommandinputs.
+●	Handledunrecognizedorinvalidcommandsgracefullybyignoringthem.
+ 
+Conclusion:
+This project successfully demonstrates the integration of speech recognition technology withsimplegaming mechanicsto createavoice-controlled interactivegamingsystem. By processing audio files containing spoken commands, the system effectively recognizes valid game inputs and executes corresponding actions such as shooting, jumping, reloading, and playing stone-paper-scissors. Handling various audio formats withinnested folder structures and filtering irrelevant commands enhances its robustness and usability.
+The voice-command gaming approach not only enriches user experience by providing hands-free interactionbut also opens upopportunities for greater accessibilityin gaming. This foundation can be extended to more complex games and advanced voice control features, paving the way for innovative, natural user interfaces in the gaming industry.
 
 6.	OutputGeneration:
 Resultsfromthecommandrecognitionandgameplayare logged intoanoutput text file(output.txt)including theaudio file name, recognized command, game moves, and outcomes.
