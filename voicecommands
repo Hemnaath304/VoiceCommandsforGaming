@@ -1,0 +1,62 @@
+# Step1:Installnecessarylibraries
+!pipinstallSpeechRecognitionpydub
+!apt-getinstallffmpeg-y import zipfile
+import osimportrandom
+import speech_recognitionas srfrompydubimportAudioSegmentfrom google.colabimport files
+#Step2:UploadZIPfile
+print("Uploadyourinput.zipcontainingfoldersandaudiofiles:") uploaded = files.upload()
+zip_path=list(uploaded.keys())[0] extract_folder ="extracted_audio" 
+withzipfile.ZipFile(zip_path, 'r')aszip_ref: zip_ref.extractall(extract_folder)
+print(f"Extractedfilesto'{extract_folder}'")
+#Step4:Functiontogetallaudiofilesrecursively
+defget_all_audio_files(base_folder, extensions=('.wav', '.mp3')): audio_files = []
+forroot,dirs, filesinos.walk(base_folder): for file in files:
+if file.lower().endswith(extensions): audio_files.append(os.path.join(root,file))
+returnaudio_files
+#Step5:Convertanymp3filestowavforcompatibility audio_files = get_all_audio_files(extract_folder)
+for file_pathinaudio_files:
+if file_path.lower().endswith(".mp3"): wav_path= file_path.rsplit('.',1)[0]+".wav"
+print(f"Converting{file_path}to{wav_path}") sound = AudioSegment.from_mp3(file_path) sound.export(wav_path, format="wav") os.remove(file_path)# Remove original mp3
+
+#Step6:Refreshaudiofileslisttoonlywavfilesnow
+audio_files = get_all_audio_files(extract_folder, extensions=('.wav',)) print(f"Found{len(audio_files)}WAVaudiofilesafterconversion.")
+iflen(audio_files) <5:
+print("Warning:Lessthan5audiofiles found,willprocessallavailable.")
+
+
+#Step7:Select 5randomaudio files(oralliflessthan5) num_files = min(5, len(audio_files))
+selected_files=random.sample(audio_files,num_files) print(f"Selected{num_files} audio files:")
+forfinselected_files: print(f)
+# Step 8: Recognizer setup recognizer =sr.Recognizer() valid_commands = {
+"shoot","jump","reload","stone","rock","paper","scissors","scissor"
+}
+output_lines=[]
+#Step9:Processeachselected audiofile
+for idx,audio_pathinenumerate(selected_files, 1): with sr.AudioFile(audio_path) as source:
+audio=recognizer.record(source) try:
+spoken_text=recognizer.recognize_google(audio).lower() print(f"[{idx}] Recognized text: {spoken_text}")
+except Exceptionase:
+print(f"[{idx}]Couldnotrecognizeaudio:{str(e)}") spoken_text = None
+ 
+output_lines.append(f"Audiofile[{idx}]:{os.path.basename(audio_path)}") if spoken_textin valid_commands:
+#Handlestone-paper-scissorsgamecommands
+ifspoken_textin{"stone","rock","paper","scissors","scissor"}: if spoken_text == "stone":
+player_move="rock"
+elifspoken_text=="scissor": player_move = "scissors"
+else:
+player_move = spoken_textmoves=["rock","paper","scissors"]
+computer_move=random.choice(moves) def decide_winner(player, comp):
+ifplayer==comp: return "draw"
+elif(player == "rock" and comp == "scissors") or \ (player =="scissors"andcomp=="paper")or\ (player == "paper" and comp == "rock"):
+return"player" else:
+return"computer"
+winner = decide_winner(player_move, computer_move) output_lines.append(f"Your move: {player_move}") output_lines.append(f"Computermove:{computer_move}") output_lines.append(f"Winner: {winner}")
+else:
+# Other valid commands (shoot, jump, reload) output_lines.append(f"Commandrecognized:{spoken_text}")
+else:
+output_lines.append("Commandnotrecognizedornotavalidgamecommand.
+Ignored.")
+output_lines.append("")#blanklineforreadability # Step 10: Write output to output.txt
+withopen("output.txt","w")asf: for line in output_lines:
+f.write(line + "\n") print("Output savedtooutput.txt")
+#Step11(optional):Downloadtheoutputfile files.download("output.txt")
